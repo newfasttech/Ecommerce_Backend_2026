@@ -4,18 +4,18 @@ import jwt from 'jsonwebtoken'
 
 export const signup = async(req, res) => {
     try {
-        const {name,email,password} = req.body
+        const {username,email,password} = req.body
 
         //check if some data missing 
         
-        if(!name || !email || !password){
+        if(!username || !email || !password){
             return res.status(400).json({message:"Some fields are missing"})
         }
 
         // check if user is already exists
         const isUserAlreadyExist = await User.findOne({email})
 
-        if(!isUserAlreadyExist){
+        if(isUserAlreadyExist){
             return res.status(400).json({message:"User Already has an Account"})
         }else{
             
@@ -28,7 +28,7 @@ export const signup = async(req, res) => {
 
             // Create user in database
             await User.create({
-                name,
+                username,
                 email,
                 password:hashedPassword,
                 token,
