@@ -4,6 +4,6 @@ import {signup,login} from "../controller/userController.js"
 import {User} from "../model/User.js"
 
 router.post('/register',signup)
-router.post('/',login)
+router.post('/login',login)
 
 export default router

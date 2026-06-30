@@ -44,8 +44,46 @@ export const signup = async(req, res) => {
         
     }
 }
-export const login = async(req, res) => {
 
+
+export const login = async(req, res) => {
+ try {
+    const {email,password} =req.body
+
+    //check if Email or password is missing
+    if(!email || !password){
+        return res.status(400).json({message:"Email and Password required..!"})
+    }
+
+    //Find user by email
+    const user = await User.findOne({email})
+
+    if(!user){
+        return res.status(400).json({message:"User is not Registered. Please Register First..!"})
+    }
+
+    const isPasswordMatched = bcrypt.compareSync(password, user.password)
+
+    if(!isPasswordMatched){
+        return res.status(400).json({message:"Password not Matched"})
+    }
+
+    return res.status(200).json(
+        {
+            id : user._id,
+            name : user.name,
+            token:user.token,
+            email:user.email,
+            role:user.role
+        }
+    )
+
+
+ } catch (error) {
+    console.error("Error During Login :",error);
+    return res.status(500).json({message:"Internal Server Error  !"})
+    
+ }
 
 }
 
